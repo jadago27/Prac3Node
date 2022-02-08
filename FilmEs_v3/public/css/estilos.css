@@ -1,0 +1,14 @@
+.par{
+    background-color: lightgray;
+}
+.impar{
+    background-color: gray;
+    color: white;
+}
+li {
+    list-style: none;
+    display: block;
+}
+form {
+    display: inline;
+}

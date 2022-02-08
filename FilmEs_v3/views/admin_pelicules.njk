@@ -1,0 +1,27 @@
+{% extends "admin_base.njk" %}
+{% block titulo %}Libros | Lista{% endblock %}
+
+{% block contenido %}
+    <h1>Listado de peliculas</h1>
+    <ul>
+        {% for pelicula in pelicules %}
+            {% if loop.index % 2 == 0 %}
+                <li class="par">
+            {% else %}
+                <li class="impar">
+            {% endif %}
+                {{ pelicula.titol }}: 
+                <a href="/admin/editar/{{ pelicula.id }}" class="btn btn-warning">Editar</a>
+                <form action="/admin/{{ pelicula.id }}" method="post">
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit" class="btn btn-danger">Borrar</button>
+                </form>
+            </li>                       
+        {% else %}
+            <h1>Error</h1>
+                <div class="alert alert-danger">
+                    Pelicula no encontrada
+                </div>
+        {% endfor %}
+    </ul>
+{% endblock %}
