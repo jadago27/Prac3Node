@@ -1,20 +1,20 @@
 {% include "public_base.njk" %}
 <form action="/buscar" method="get">
-    <div class="form-group">
+    <div class="mb-3 form-group">
         <label for="titulo">Buscar:</label>
         <input type="text" class="form-control" name="buscar"
         placeholder="buscar..." value=""/>
     </div>
-    <button type="submit" class="btn btn-primary">Buscar</button>
+    <button type="submit" class="mb-3 btn btn-primary">Buscar</button>
 </form>
 
 {% if resultado %}
     <ul>
         {% for pelicula in resultado %}
             {% if loop.index % 2 == 0 %}
-                <li class="par">
+                <li class="par mb-2">
             {% else %}
-                <li class="impar">
+                <li class="impar mb-2">
             {% endif %}
                 {{ pelicula.titol }}: 
                 <a href="/pelicula/{{ pelicula.id }}" class="btn btn-success">Ficha pelicula</a>

@@ -8,7 +8,12 @@ const express = require('express');
 const multer = require('multer');
 
 let Pelicula = require(__dirname + '/../models/pelicula.js');
+let Director = require(__dirname + '/../models/director.js');
+let generador = require(__dirname + '/../utils/generar_directors.js');
 let autenticacion = require(__dirname + '/../utils/auth.js');
+
+let generos = ['comedia', 'terror', 'drama', 'aventures', 'altres'];
+let directors = [];
 
 let router = express.Router();
 let storage = multer.diskStorage({
@@ -18,13 +23,11 @@ let storage = multer.diskStorage({
     filename: function (req, file, cb) {
       cb(null, Date.now() + "_" + file.originalname)
     }
-  })
+  });
 
 let upload = multer({storage: storage});
 
-let pelicules = [];
-
-router.get('/', (req, res) => {
+router.get('/',autenticacion,  (req, res) => {
     Pelicula.find().then(resultado => {
         res.status(200)
         .render('admin_pelicules', {pelicules: resultado});
@@ -34,31 +37,44 @@ router.get('/', (req, res) => {
     }); 
 });
 
-router.get('/nova', (req, res) => {
-    res.status(200).render('admin_pelicules_form');
-});
-
-router.get('/editar/:id', (req, res) => {
-    Pelicula.findById(req.params.id).then(resultado => {
-        if(resultado)
-            res.status(200)
-               .render('admin_pelicules_form', {pelicula: resultado });
-        else
-            res.status(400)
-               .render('admin_error' ,{error: "Pel·lícula no trobada"});
+router.get('/directors',  (req, res) => {
+    Director.find().then(resultado => {
+        res.status(200)
+        .render('direcotres', {directores: resultado});
     }).catch (error => {
         res.status(500)
             .render('admin_error');
-    });  
+    }); 
 });
 
-router.post('/', upload.single('imatge'), (req, res) => {
+router.get('/nova',autenticacion,  (req, res) => {
+    res.status(200).render('admin_pelicules_form', {generos: generos});
+});
+
+router.get('/editar/:id',autenticacion,  (req, res) => {
+        Pelicula.findById(req.params.id).then(resultado => {
+            if(resultado){
+                res.status(200)
+                .render('admin_pelicules_form', {pelicula: resultado, generos: generos});
+            }
+                else
+                res.status(400)
+                    .render('admin_error' ,{error: "Pel·lícula no trobada"});
+        }).catch (error => {
+            res.status(500)
+                .render('admin_error');
+        });
+});
+
+router.post('/',autenticacion,  upload.single('imatge'), (req, res) => {
     let novaPelicula = new Pelicula({
         titol: req.body.titol, 
         duracio: req.body.duracio,
         genere: req.body.genere,
         sinopsi: req.body.sinopsi,
-        valoracio: req.body.valoracio
+        director: req.body.director,
+        valoracio: req.body.valoracio,
+        imatge: req.file.filename
     });
     novaPelicula.save().then(resultado => {
         res.redirect(req.baseUrl);
@@ -74,6 +90,7 @@ router.put('/:id', (req,res) => {
         titol: req.body.titol, 
         duracio: req.body.duracio,
         genere: req.body.genere,
+        sinopsi: req.body.sinopsi,
         director: req.body.director,
         valoracio: req.body.valoracio
         }

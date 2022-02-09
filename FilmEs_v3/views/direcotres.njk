@@ -4,18 +4,13 @@
 {% block contenido %}
     <h1>Listado de peliculas</h1>
     <ul>
-        {% for pelicula in pelicules %}
+        {% for director in directores %}
             {% if loop.index % 2 == 0 %}
                 <li class="par mb-2">
             {% else %}
                 <li class="impar mb-2">
             {% endif %}
-                {{ pelicula.titol }}: 
-                <a href="/admin/editar/{{ pelicula.id }}" class="btn btn-warning">Editar</a>
-                <form action="/admin/{{ pelicula.id }}" method="post">
-                    <input type="hidden" name="_method" value="delete" />
-                    <button type="submit" class="btn btn-danger">Borrar</button>
-                </form>
+                {{ director.nom }}
             </li>                       
         {% else %}
             <h1>Error</h1>
