@@ -5,74 +5,58 @@
 {% block contenido %}
     {% if pelicula %} 
         <h1>Editar</h1>
-        <form action="/admin/{{ pelicula.id }}" method="post">
+    {% else %}
+        <h1>Nueva Pelicula</h1>
+    {% endif %}
+        <form action="/admin/{{ pelicula.id }}" method="post" enctype="multipart/form-data">
+        {% if pelicula %}
             <input type="hidden" name="_method" value="put" />
-            <div class="form-group">
+        {% endif %}
+            <div class="form-group mb-3">
                 <label for="titol">Titulo:</label>
                 <input type="text" class="form-control" name="titol"
                 placeholder="Titulo..." value="{{ pelicula.titol }}" />
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="sinopsi">Sinopsi:</label>
                 <input type="text" class="form-control" name="sinopsi"
                 placeholder="Sinopsi..." value="{{ pelicula.sinopsi }}"/>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="duracio">duracio:</label>
                 <input type="number" class="form-control" name="duracio"
                 placeholder="Duracio..." value="{{ pelicula.duracio }}"/>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="genere">genere:</label>
-                <input type="text" class="form-control" name="genere"
-                placeholder="Genere..." value="{{ pelicula.genere }}"/>
+                <select id="genere" name="genere">
+                    {% for genero in generos %}
+                        {% if pelicula.genere == genero %}
+                            <option value="{{ genero }}" selected>{{ genero }}</option>
+                        {% else %}
+                            <option value="{{ genero }}">{{ genero }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="imatge">imatge:</label>
                 <input type="file" class="form-control" name="imatge"
                 placeholder="Imatge..." value="{{ pelicula.imatge }}"/>
             </div>
-            <div class="form-group">
-                <label for="valoracio">valoracio:</label>
-                <input type="text" class="form-control" name="valoracio"
-                placeholder="Valoracio..." min="1" max="5" value="{{ pelicula.valoracio }}"/>
+            <div class="form-group mb-3">
+                <label for="valoracio">Valoracio:</label>
+                <select id="valoracio" name="valoracio">
+                    {% for i in range(0,6) %}
+                        {% if pelicula.valoracio == i %}
+                            <option value="{{ i }}" selected>{{ i }}</option>
+                        {% else %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
             </div>
+            
             <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
-    {% else %}
-        <h1>Editar</h1>
-        <form action="/admin" method="post">
-            <div class="form-group">
-                <label for="titol">Titulo:</label>
-                <input type="text" class="form-control" name="titol"
-                placeholder="Titulo..." />
-            </div>
-            <div class="form-group">
-                <label for="sinopsi">Sinopsi:</label>
-                <input type="text" class="form-control" name="sinopsi"
-                placeholder="Sinopsi..." />
-            </div>
-            <div class="form-group">
-                <label for="duracio">duracio:</label>
-                <input type="number" class="form-control" name="duracio"
-                placeholder="Duracio..." />
-            </div>
-            <div class="form-group">
-                <label for="genere">genere:</label>
-                <input type="text" class="form-control" name="genere"
-                placeholder="Genere..." />
-            </div>
-            <div class="form-group">
-                <label for="imatge">imatge:</label>
-                <input type="file" class="form-control" name="imatge"
-                placeholder="Imatge..." />
-            </div>
-            <div class="form-group">
-                <label for="valoracio">valoracio:</label>
-                <input type="text" class="form-control" name="valoracio"
-                placeholder="Valoracio..." min="0" max="5"/>
-            </div>
-            <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
-    {% endif %}
 {% endblock %}

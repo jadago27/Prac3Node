@@ -5,6 +5,7 @@
  */
 
 const express = require('express');
+const { SHA256 } = require('crypto-js');
 
 let router = express.Router();
 
@@ -12,6 +13,7 @@ let generador = require(__dirname + '/../utils/generar_usuaris.js');
 const Usuari = require(__dirname + '/../models/usuari');
 
 let usuarios = [];
+
 router.get('/login', (req, res) => {
     res.render('auth_login');
 });
@@ -19,13 +21,13 @@ router.get('/login', (req, res) => {
 // Proceso de login (obtener credenciales y cotejar)
 router.post('/login', (req, res) => {
     let login = req.body.login;
-    let password = req.body.password;
+    let password = SHA256(req.body.password);
 
     Usuari.find().then(resultado=> {
         let existeUsuario = resultado.filter(usuario => usuario.login == login && usuario.password == password);
         if (existeUsuario.length > 0)
         {
-            req.session.usuario = existeUsuario[0].usuario;
+            req.session.usuario = existeUsuario[0];
             res.redirect('/admin');
         } else {
             res.render('auth_login', {error: "Usuario o contraseña incorrectos"});
